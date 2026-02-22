@@ -19,13 +19,26 @@ START → Planner → Researcher → [enough data?] → Analyzer → Writer → 
 
 ## Setup
 
-### 1. Install dependencies
+### 1. Create a virtual environment
+
+```bash
+python -m venv venv
+
+# Activate it:
+# Windows
+.\venv\Scripts\activate
+
+# macOS / Linux
+source venv/bin/activate
+```
+
+### 2. Install dependencies
 
 ```bash
 pip install -e .
 ```
 
-### 2. Configure API keys
+### 3. Configure API keys
 
 ```bash
 cp .env.example .env
