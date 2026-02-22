@@ -4,18 +4,48 @@ A multi-agent research assistant powered by **LangGraph** that researches any to
 
 ## Architecture
 
-```
-START → Planner → Researcher → [enough data?] → Analyzer → Writer → END
-           ↑           |
-           └───────────┘  (loop if insufficient data)
+```mermaid
+flowchart LR
+    S((Start)) --> P
+
+    subgraph Pipeline
+        direction LR
+        P[Planner] --> R[Researcher]
+        R -- enough data --> A[Analyzer]
+        R -- need more --> P
+        A --> W[Writer]
+    end
+
+    subgraph Tools
+        direction TB
+        T1[Web Search]
+        T2[Blog Scraper]
+        T3[Summarizer]
+    end
+
+    R -.-> T1
+    R -.-> T2
+    R -.-> T3
+
+    W --> E((Report))
 ```
 
-| Agent | Role |
-|-------|------|
-| **Planner** | Generates sub-questions, search queries, and URLs to scrape |
-| **Researcher** | Executes web searches, scrapes blogs, summarizes content |
-| **Analyzer** | Synthesizes findings into structured thematic analysis |
-| **Writer** | Produces a polished markdown research report with citations |
+### 🤖 Agents
+
+| Agent | Description |
+|-------|-------------|
+| **📋 Planner** | Analyzes the topic and generates a research strategy — sub-questions to answer, optimized search queries, and URLs to scrape |
+| **🔍 Researcher** | Executes the plan by running web searches, scraping blog posts, and summarizing long-form content. Loops back to the Planner if data is insufficient (up to N iterations) |
+| **🔬 Analyzer** | Synthesizes all collected sources into a structured analysis — identifies key themes, recurring patterns, contradictions, and knowledge gaps |
+| **📝 Writer** | Transforms the analysis into a polished, publication-ready markdown report with executive summary, detailed findings, and numbered citations |
+
+### 🛠️ Tools
+
+| Tool | Description |
+|------|-------------|
+| **🌐 Web Search** | Searches via [Tavily](https://tavily.com) API; automatically falls back to DuckDuckGo if no API key is set |
+| **📄 Blog Scraper** | Fetches and extracts main content from any URL using semantic HTML parsing (BeautifulSoup) |
+| **✂️ Summarizer** | LLM-powered summarization that condenses long articles while focusing on the research topic |
 
 ## Setup
 
